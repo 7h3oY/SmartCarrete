@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/black">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorVinculos"
+        android:elevation="4dp"
+        android:titleTextColor="@android:color/white"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+
+        <!-- Icono de usuario -->
+        <ImageView
+            android:id="@+id/iconUser"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:padding="8dp"
+            android:src="@drawable/usuario"
+            android:contentDescription="Icono de usuario" />
+
+        <!-- Icono del carrito de compras -->
+        <FrameLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end">
+            <ImageView
+                android:id="@+id/iconCart"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="10dp"
+                android:src="@drawable/espiritu"
+                android:contentDescription="Icono del carrito de compras" />
+            <TextView
+                android:id="@+id/tvCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@android:color/holo_red_dark"
+                android:text="0"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:layout_gravity="right|top"
+                android:visibility="gone"/>
+        </FrameLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Menú"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:padding="8dp" />
+
+
+    <!-- Cuadros con imágenes y texto -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Cuadro 1 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:clickable="true"
+            android:onClick="addToCart"
+            android:id="@+id/cuadro1">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/cola"
+                android:contentDescription="Imagen 1" />
+            <TextView
+                android:id="@+id/contador1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@android:color/holo_red_dark"
+                android:text="0"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:layout_gravity="right|top"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/nombre1"
+                android:layout_width="59dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Bebidas"
+                android:textColor="@color/colorVinculos"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Coca cola, Sprite, Fanta, Pepsi, Ginger Ale, Red Bulls"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp" />
+            <TextView
+                android:id="@+id/precio1"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="2000"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp" />
+
+        </LinearLayout>
+
+        <!-- Cuadro 2 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:clickable="true"
+            android:onClick="addToCart"
+            android:id="@+id/cuadro2">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/agua"
+                android:contentDescription="aguas" />
+            <TextView
+                android:id="@+id/contador2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@android:color/holo_red_dark"
+                android:text="0"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:layout_gravity="right|top"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/nombre2"
+                android:layout_width="59dp"
+                android:layout_height="wrap_content"
+                android:text="Aguas/Jugos"
+                android:textSize="16sp"
+                android:textColor="@color/colorVinculos"
+                android:layout_marginStart="16dp" />
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Cachantun, Vital, Benedictino(Con Gas/Sin Gas), Jugos Naturales"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp" />
+            <TextView
+                android:id="@+id/precio2"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="3000"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp" />
+
+        </LinearLayout>
+
+        <!-- Cuadro 3 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:clickable="true"
+            android:onClick="addToCart"
+            android:id="@+id/cuadro3">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/schop"
+                android:contentDescription="cervezas" />
+            <TextView
+                android:id="@+id/contador3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@android:color/holo_red_dark"
+                android:text="0"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:layout_gravity="right|top"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/nombre3"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="Cervezas"
+                android:textSize="16sp"
+                android:textColor="@color/colorVinculos"
+                android:layout_marginStart="16dp" />
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Schop 500cc, Cervezas 350cc Corona, Austral, Kunstman"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp" />
+            <TextView
+                android:id="@+id/precio3"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="5000"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp" />
+
+        </LinearLayout>
+
+        <!-- Cuadro 4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:clickable="true"
+            android:onClick="addToCart"
+            android:id="@+id/cuadro4">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/piscola"
+                android:contentDescription="Destilados" />
+            <TextView
+                android:id="@+id/contador4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@android:color/holo_red_dark"
+                android:text="0"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:layout_gravity="right|top"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/nombre4"
+                android:layout_width="78dp"
+                android:layout_height="wrap_content"
+                android:text="Destilados"
+                android:textSize="16sp"
+                android:textColor="@color/colorVinculos"
+                android:layout_marginStart="16dp" />
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="Pisco, Ron, Vodka, Whisky,Jack Daniels"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp" />
+            <TextView
+                android:id="@+id/precio4"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="5000"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

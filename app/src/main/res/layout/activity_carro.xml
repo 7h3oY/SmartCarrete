@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/black">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorVinculos"
+        android:elevation="4dp"
+        android:titleTextColor="@android:color/white"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <!-- Icono de usuario -->
+        <ImageView
+            android:id="@+id/iconUser"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:padding="8dp"
+            android:src="@drawable/usuario"
+            android:contentDescription="Icono de usuario" />
+
+        <!-- Icono del carrito de compras -->
+        <FrameLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end">
+            <ImageView
+                android:id="@+id/iconCart"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="10dp"
+                android:src="@drawable/espiritu"
+                android:contentDescription="Icono del carrito de compras" />
+            <TextView
+                android:id="@+id/tvCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@android:color/holo_red_dark"
+                android:text="0"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:layout_gravity="right|top"
+                android:visibility="gone"/>
+        </FrameLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Carro de Compras"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:padding="8dp" />
+
+
+    <!-- Cuadros con imágenes y texto -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Botones para continuar o vaciar el carrito -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnVaciarCarrito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vaciar Carrito"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/colorVinculos"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/btnContinuarCompra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continuar Compra"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/colorVinculos"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+</LinearLayout>
