@@ -40,12 +40,14 @@ public class ActivityCarro extends AppCompatActivity {
     private TextView tvCounter;
     private int itemCount;
     private String idPedido;
+    private boolean isCartEmpty = false;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carro);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
@@ -58,18 +60,12 @@ public class ActivityCarro extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(itemCount == 0){
-                    cartItems.clear();
-                    intent.putExtra("itemCount", itemCount);
-                    onBackPressed();
-                }else{
-                    onBackPressed();
-                }
+                onBackPressed(); // Llamar al nuevo onBackPressed()
             }
         });
         // Obtener la lista de productos agregados al carrito desde el intent (puedes cambiar esto según tu implementación)
         cartItems = getIntent().getParcelableArrayListExtra("cartItems");
-
+        cartItems = agruparProductosPorNombre(cartItems);
         // Configurar el RecyclerView para mostrar la lista de productos en el carrito
         RecyclerView recyclerViewCart = findViewById(R.id.recyclerViewCart);
         CartAdapter cartAdapter = new CartAdapter(this, cartItems);
@@ -81,12 +77,21 @@ public class ActivityCarro extends AppCompatActivity {
         btnVaciarCarrito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Vaciar el carrito y notificar al adaptador del cambio en la lista
                 cartItems.clear();
                 cartAdapter.notifyDataSetChanged();
+                // Restablecer el contador y ocultar el badge
                 itemCount = 0;
                 tvCounter.setVisibility(View.GONE);
+                // Actualizar el badge (contador) y la lista del pedido en la actividad ActivityCarro
+                updateBadgeAndPedidoList(cartItems);
+                // Enviar el resultado de vuelta a la ActivityUsuario
+                Intent intent = new Intent();
+                intent.putExtra("isCartEmpty", true);
+                setResult(RESULT_OK, intent);
             }
         });
+
 
         // Configurar el botón "Continuar Compra"
         Button btnContinuarCompra = findViewById(R.id.btnContinuarCompra);
@@ -97,17 +102,72 @@ public class ActivityCarro extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onBackPressed() {
+        if (itemCount == 0) {
+            // El carrito está vacío, enviar isCartEmpty como true a ActivityUsuario
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("isCartEmpty", true);
+            setResult(RESULT_OK, resultIntent);
+            cartItems.clear();
+            finish();
+        } else {
+            // El carrito no está vacío, simplemente regresar a ActivityUsuario
+            super.onBackPressed();
+        }
+    }
+    private void updateBadgeTextView() {
+        if (isCartEmpty) {
+            tvCounter.setText("0"); // Establecer el texto del badge como "0"
+            tvCounter.setVisibility(View.GONE); // Ocultar el badge
+        } else {
+            tvCounter.setText(String.valueOf(itemCount)); // Establecer el texto del badge con el número actual
+            tvCounter.setVisibility(View.VISIBLE); // Mostrar el badge
+        }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isCartEmpty = false;
+    }
+    // Método para agrupar los productos por nombre
+    private List<PedidoUsuario> agruparProductosPorNombre(List<PedidoUsuario> listaOriginal) {
+        // HashMap para agrupar los productos por nombre y mantener sus cantidades y precios actualizados
+        HashMap<String, PedidoUsuario> productosAgrupados = new HashMap<>();
+
+        for (PedidoUsuario item : listaOriginal) {
+            String nombreProducto = item.getNombre();
+            int cantidad = item.getCantidad();
+
+            if (productosAgrupados.containsKey(nombreProducto)) {
+                // Si el producto ya está en el HashMap, actualiza su cantidad
+                PedidoUsuario productoExistente = productosAgrupados.get(nombreProducto);
+                int nuevaCantidad = productoExistente.getCantidad() + cantidad;
+                productoExistente.setCantidad(nuevaCantidad);
+            } else {
+                // Si el producto no está en el HashMap, agrégalo tal cual al HashMap
+                productosAgrupados.put(nombreProducto, item);
+            }
+        }
+
+        // Obtener la lista final de productos consolidados del HashMap
+        return new ArrayList<>(productosAgrupados.values());
+    }
+
 
     private void enviarDatosCarritoAlServidor() {
         // URL de tu servidor PHP
         String url = "https://mokups.000webhostapp.com/php/subir_archivo.php";
-
         // Generar el ID único
         String idPedido = generateUniqueID();
-
+        // Crear el objeto Pedido
+        Pedido pedido = new Pedido(idPedido, "usuario"); // Puedes cambiar "usuario" por el valor real del usuario
+        // Agregar los PedidoUsuario al Pedido
+        for (PedidoUsuario item : cartItems) {
+            pedido.agregarProducto(item);
+        }
         // Crear la solicitud HTTP usando Volley
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-
         // Crear una solicitud de tipo StringRequest
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -133,28 +193,86 @@ public class ActivityCarro extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 // Crear un mapa con los datos del carrito en formato clave-valor
                 Map<String, String> params = new HashMap<>();
+                params.put("usuario", "usuario");
+                params.put("idPedido", pedido.getIdPedido());
+                params.put("estadoPedido", "pagado");
 
-                for (PedidoUsuario item : cartItems) {
-                    // Agregar los datos del producto al mapa
-                    params.put("usuario", "usuario"); // Cambiar "usuario" por el valor real del usuario
-                    params.put("pedidoID", idPedido); // Agregar el ID único generado
-                    params.put("item", item.getNombre());
-                    params.put("cantidad", String.valueOf(item.getCantidad())); // Obtener la cantidad actual
-                    params.put("total", String.valueOf(item.getTotal()));
-                    params.put("estado", "pagado");
+                // Agrupar los productos bajo un mismo ID de pedido
+                List<PedidoUsuario> productosPedido = pedido.getProductosPedido();
+                try {
+                    // HashMap para agrupar los productos por nombre y mantener sus cantidades y precios actualizados
+                    HashMap<String, PedidoUsuario> productosAgrupados = new HashMap<>();
+
+                    // Verificar que productosPedido no sea nulo antes de entrar en el bucle
+                    if (productosPedido != null) {
+                        for (int i = 0; i < productosPedido.size(); i++) {
+                            PedidoUsuario item = productosPedido.get(i);
+                            String nombreProducto = item.getNombre();
+                            int cantidad = item.getCantidad();
+                            int precio = (int) item.getTotal();
+
+                            if (productosAgrupados.containsKey(nombreProducto)) {
+                                // Si el producto ya está en el HashMap, actualiza su cantidad y precio
+                                PedidoUsuario productoExistente = productosAgrupados.get(nombreProducto);
+                                int nuevaCantidad = productoExistente.getCantidad() + cantidad;
+                                int nuevoPrecio = (int) (productoExistente.getTotal() + precio);
+                                productoExistente.setCantidad(nuevaCantidad);
+                            } else {
+                                // Si el producto no está en el HashMap, agrégalo tal cual al HashMap
+                                productosAgrupados.put(nombreProducto, new PedidoUsuario(nombreProducto, cantidad, precio));
+                            }
+
+                        }
+                    }
+
+                    // Obtener la lista final de productos consolidados del HashMap
+                    List<PedidoUsuario> productosConsolidados = new ArrayList<>(productosAgrupados.values());
+
+                    // Crear un JSONArray con los productos consolidados
+                    JSONArray jsonArrayProductos = new JSONArray();
+                    for (PedidoUsuario item : productosConsolidados) {
+                        JSONObject jsonObjectProducto = new JSONObject();
+                        jsonObjectProducto.put("nombre", item.getNombre());
+                        jsonObjectProducto.put("cantidad", item.getCantidad());
+                        jsonObjectProducto.put("precio", item.getTotal());
+                        jsonArrayProductos.put(jsonObjectProducto);
+                    }
+
+                    // Agregar el JSONArray de productos al mapa de parámetros
+                    params.put("productos", jsonArrayProductos.toString());
+                } catch (JSONException e) {
+                    // Manejar la excepción aquí
+                    e.printStackTrace();
                 }
 
                 return params;
             }
-
         };
-
         // Agregar la solicitud a la cola de solicitudes
         requestQueue.add(stringRequest);
     }
+
     private String generateUniqueID() {
         // Generar un ID único con UUID
         return UUID.randomUUID().toString();
+    }
+
+    public void updateBadgeAndPedidoList(List<PedidoUsuario> cartItems) {
+        // Actualizar el contador del badge
+        itemCount = 0;
+        for (PedidoUsuario item : cartItems) {
+            itemCount += item.getCantidad();
+        }
+        if (itemCount == 0) {
+            tvCounter.setVisibility(View.GONE);
+        } else {
+            tvCounter.setText(String.valueOf(itemCount));
+            tvCounter.setVisibility(View.VISIBLE);
+        }
+
+        // Actualizar la lista del pedido
+        // Puedes implementar aquí la lógica para enviar la lista actualizada a la base de datos o donde corresponda
+        // ...
     }
 
 }

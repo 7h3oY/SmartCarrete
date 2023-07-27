@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvNumeroPedido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/tvArticulos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textColor="@android:color/darker_gray"/>
+    <Button
+        android:id="@+id/btnPreparado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pedido Listo"
+        android:layout_margin="8dp"
+        android:backgroundTint="@color/colorVinculos"
+        android:textColor="@color/white"/>
+
+    <Button
+        android:id="@+id/btnVerificarQr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:backgroundTint="@color/colorVinculos"
+        android:text="Verificar QR"
+        android:textColor="@color/white" />
+</LinearLayout>

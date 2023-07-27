@@ -16,10 +16,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     private Context context;
     private List<PedidoUsuario> cartItems;
+    private OnItemDeleteListener onItemDeleteListener; // Listener para comunicarse con la actividad
 
     public CartAdapter(Context context, List<PedidoUsuario> cartItems) {
         this.context = context;
         this.cartItems = cartItems;
+    }
+
+    public void setOnItemDeleteListener(OnItemDeleteListener listener) {
+        this.onItemDeleteListener = listener;
     }
 
     @NonNull
@@ -33,10 +38,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         PedidoUsuario item = cartItems.get(position);
         holder.txtProductName.setText(item.getNombre());
-        holder.txtProductPrice.setText(String.format("%.2f", item.getPrecio()));
+        holder.txtProductPrice.setText(String.valueOf(item.getPrecio())); // Sin formato
         holder.tvQuantity.setText(String.valueOf(item.getCantidad()));
-        double total = item.getPrecio() * item.getCantidad();
-        holder.txtTotalPrice.setText(String.format("%.2f", total));
+        int total = item.getPrecio() * item.getCantidad(); // Total como entero
+        holder.txtTotalPrice.setText(String.valueOf(total));
 
         // Configurar el botón de disminución
         holder.btnDecreaseQuantity.setOnClickListener(new View.OnClickListener() {
@@ -60,8 +65,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 notifyDataSetChanged();
             }
         });
-    }
 
+        // Configurar el botón de eliminación
+        holder.btnDeleteItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Eliminar el ítem correspondiente del carrito
+                cartItems.remove(position);
+                // Notificar al adaptador del cambio en la lista
+                notifyDataSetChanged();
+                // Actualizar el badge (contador) y la lista del pedido en la actividad ActivityCarro
+                ((ActivityCarro) context).updateBadgeAndPedidoList(cartItems);
+            }
+        });
+    }
 
     @Override
     public int getItemCount() {
@@ -75,6 +92,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         TextView txtTotalPrice;
         ImageButton btnDecreaseQuantity;
         ImageButton btnIncreaseQuantity;
+        ImageButton btnDeleteItem;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,6 +102,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             txtTotalPrice = itemView.findViewById(R.id.txtTotalPrice);
             btnDecreaseQuantity = itemView.findViewById(R.id.btnDecreaseQuantity);
             btnIncreaseQuantity = itemView.findViewById(R.id.btnIncreaseQuantity);
+            btnDeleteItem = itemView.findViewById(R.id.btnDeleteItem); // Obtener el botón de eliminación
         }
     }
+
+    public interface OnItemDeleteListener {
+        void onItemDelete(int position); // Método para notificar la eliminación de un item
+    }
 }
+

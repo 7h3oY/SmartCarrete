@@ -3,29 +3,30 @@ package com.example.saltalafilav1;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class PedidoUsuario implements Parcelable {
 
     private String nombre;
     private int cantidad;
-    private double precio;
-    private double total;
-    private String usuario;
+    private int precio;
+    private int total;
     private String idPedido;
+    private int cantidadTotal;
 
-    public PedidoUsuario(String nombre, int cantidad, int precio, String usuario) {
+    public PedidoUsuario(String nombre, int cantidad, int precio) {
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.precio = precio;
-        this.total = cantidad * precio; // Calcular el total basado en cantidad y precio
-        this.usuario = usuario;
+        this.total = cantidad * precio; // No calcular el total aquí
     }
 
     protected PedidoUsuario(Parcel in) {
         nombre = in.readString();
         cantidad = in.readInt();
-        precio = in.readDouble();
-        total = in.readDouble();
-        usuario = in.readString();
+        precio = in.readInt();
+        total = in.readInt();
     }
 
     public static final Creator<PedidoUsuario> CREATOR = new Creator<PedidoUsuario>() {
@@ -57,25 +58,25 @@ public class PedidoUsuario implements Parcelable {
         this.total = cantidad * precio; // Recalcular el total después de actualizar la cantidad
     }
 
-    public double getPrecio() {
+    public int getPrecio() {
         return precio;
     }
 
-    public void setPrecio(double precio) {
+    public void setPrecio(int precio) {
         this.precio = precio;
         this.total = cantidad * precio; // Recalcular el total después de actualizar el precio
     }
 
-    public double getTotal() {
+    public int getTotal() {
         return total;
     }
 
-    public String getUsuario() {
-        return usuario;
+    public int getCantidadTotal() {
+        return cantidadTotal;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setCantidadTotal(int cantidadTotal) {
+        this.cantidadTotal = cantidadTotal;
     }
 
     @Override
@@ -87,12 +88,12 @@ public class PedidoUsuario implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(nombre);
         dest.writeInt(cantidad);
-        dest.writeDouble(precio);
-        dest.writeDouble(total);
-        dest.writeString(usuario);
+        dest.writeInt(precio);
+        dest.writeInt(total);
     }
-
 }
+
+
 
 
 

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Salta la Fila</string>
+    <string name="default_notification_channel_id" translatable="false">canal_id</string>
+
 </resources>

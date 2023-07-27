@@ -52,6 +52,15 @@
             android:background="?android:attr/selectableItemBackground"
             android:padding="8dp"
             android:scaleType="fitCenter" />
+        <ImageButton
+            android:id="@+id/btnDeleteItem"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/borrar"
+            android:contentDescription="Aumentar cantidad"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="8dp"
+            android:scaleType="fitCenter" />
 
     </LinearLayout>
 

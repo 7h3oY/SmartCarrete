@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.badge.BadgeDrawable;
@@ -64,14 +65,12 @@ public class ActivityUsuario extends AppCompatActivity {
                     // Si el carrito está vacío, muestra un mensaje
                     Toast.makeText(ActivityUsuario.this, "El carrito de compras está vacío", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Si hay productos en el carrito, abre la actividad del carrito
-                    Intent intent = new Intent(ActivityUsuario.this, ActivityCarro.class);
-                    intent.putParcelableArrayListExtra("cartItems", (ArrayList<? extends Parcelable>) cartItems);
-                    intent.putExtra("itemCount", itemCount); // Agregar itemCount como extra en el Intent
-                    startActivity(intent);
+                    // Si hay productos en el carrito, abre la actividad del carrito usando startActivityForResult
+                    openCartActivity();
                 }
             }
         });
+
 
         cuadro1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +133,56 @@ public class ActivityUsuario extends AppCompatActivity {
             }
         });
     }
+    public void openCartActivity() {
+        Intent intent = new Intent(ActivityUsuario.this, ActivityCarro.class);
+        intent.putParcelableArrayListExtra("cartItems", (ArrayList<? extends Parcelable>) cartItems);
+        intent.putExtra("itemCount", itemCount); // Agregar itemCount como extra en el Intent
+        startActivityForResult(intent, 1); // Usamos el requestCode 1
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateBadgeTextView();
+    }
+    private void updateBadgeTextView() {
+        if (itemCount == 0) {
+            tvCounter.setText("0");
+            tvCounter.setVisibility(View.GONE);
+        } else {
+            tvCounter.setText(String.valueOf(itemCount)); // Establecer el texto del badge con el número actual
+            tvCounter.setVisibility(View.VISIBLE); // Mostrar el badge
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                boolean isCartEmpty = data.getBooleanExtra("isCartEmpty", false);
+                if (isCartEmpty) {
+                    itemCount = 0;
+                    isVisible1 = false;
+                    isVisible2 = false;
+                    isVisible3 = false;
+                    isVisible4 = false;
+                    contador1.setText("0");
+                    contador2.setText("0");
+                    contador3.setText("0");
+                    contador4.setText("0");
+                    contador1.setVisibility(View.GONE);
+                    contador2.setVisibility(View.GONE);
+                    contador3.setVisibility(View.GONE);
+                    contador4.setVisibility(View.GONE);
+                    updateBadgeTextView();
+                } else {
+                    // El carrito no está vacío, actualiza el contador del badge según la cantidad actual
+                    tvCounter.setText(String.valueOf(itemCount));
+                    tvCounter.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
 
     // Método para manejar el clic en los cuadros
     public void addToCart(String cuadroSeleccionado) {
@@ -164,28 +213,28 @@ public class ActivityUsuario extends AppCompatActivity {
                     TextView precioCuadro1 = findViewById(R.id.precio1);
                     int precioCuadro1Int = Integer.parseInt(precioCuadro1.getText().toString());
                     String nombreProducto1 = "Bebidas";
-                    cartItems.add(new PedidoUsuario(nombreProducto1, 1, precioCuadro1Int, "usuario")); // La cantidad inicial es 1
+                    cartItems.add(new PedidoUsuario(nombreProducto1, 1, precioCuadro1Int)); // La cantidad inicial es 1
                     break;
                 case "Cuadro 2":
                     // Agregar producto 2 al carrito de compras
                     TextView precioCuadro2 = findViewById(R.id.precio2);
                     int precioCuadro2Int = Integer.parseInt(precioCuadro2.getText().toString());
                     String nombreProducto2 = "Aguas/Jugos";
-                    cartItems.add(new PedidoUsuario(nombreProducto2, 1, precioCuadro2Int, "usuario")); // La cantidad inicial es 1
+                    cartItems.add(new PedidoUsuario(nombreProducto2, 1, precioCuadro2Int)); // La cantidad inicial es 1
                     break;
                 case "Cuadro 3":
                     // Agregar producto 3 al carrito de compras
                     TextView precioCuadro3 = findViewById(R.id.precio3);
                     int precioCuadro3Int = Integer.parseInt(precioCuadro3.getText().toString());
                     String nombreProducto3 = "Cervezas";
-                    cartItems.add(new PedidoUsuario(nombreProducto3, 1, precioCuadro3Int, "usuario")); // La cantidad inicial es 1
+                    cartItems.add(new PedidoUsuario(nombreProducto3, 1, precioCuadro3Int)); // La cantidad inicial es 1
                     break;
                 case "Cuadro 4":
                     // Agregar producto 4 al carrito de compras
                     TextView precioCuadro4 = findViewById(R.id.precio4);
                     int precioCuadro4Int = Integer.parseInt(precioCuadro4.getText().toString());
                     String nombreProducto4 = "Destilados";
-                    cartItems.add(new PedidoUsuario(nombreProducto4, 1, precioCuadro4Int, "usuario")); // La cantidad inicial es 1
+                    cartItems.add(new PedidoUsuario(nombreProducto4, 1, precioCuadro4Int)); // La cantidad inicial es 1
                     break;
                 default:
                     break;
